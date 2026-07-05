@@ -17,13 +17,7 @@ body{
     color:#00415c;
 
     background:
-    linear-gradient(
-        180deg,
-        #7edfff 0%,
-        #b7fff2 30%,
-        #fff6b8 65%,
-        #ffd7c8 100%
-    );
+    linear-gradient( 180deg, #6bf6fd 0%, #3ff6ff 30%, #31ffb2 65%, #1dffca 100% );
 
     overflow-x:hidden;
 }
@@ -76,17 +70,13 @@ body{
     backdrop-filter:blur(20px);
 
     background:
-    linear-gradient(
-        180deg,
-        rgba(78,225,90,.95),
-        rgba(39,180,53,.92)
-    );
+    linear-gradient( 180deg, rgba(84, 238, 166, 0.95), rgba(29, 190, 114, 0.92) );
 
     border-bottom:
     1px solid rgba(255,255,255,.5);
 
     box-shadow:
-    0 4px 12px rgba(0,0,0,.15);
+    0 4px 12px rgba(0, 0, 0, 0.31);
 }
 
 .logo-area{
@@ -427,10 +417,10 @@ input[type="time"]{
     );
 
     border:
-    1px solid rgba(255,255,255,.6);
+    3px solid rgba(255,255,255,.6);
 
     box-shadow:
-    0 10px 25px rgba(0,0,0,.12);
+    0 10px 25px rgba(0, 0, 0, 0.22);
 
 }
 
