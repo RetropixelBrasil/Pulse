@@ -3,10 +3,13 @@ const CACHE_NAME = "pulse-v1";
 const FILES = [
 
     "./",
+
     "./index.html",
     "./feed.html",
     "./history.html",
     "./settings.html",
+
+    "./manifest.webmanifest",
 
     "./css/style.css",
 
@@ -14,6 +17,17 @@ const FILES = [
     "./js/feed.js",
     "./js/history.js",
     "./js/settings.js",
+    "./js/news-loader.js",
+    "./js/rss.js",
+
+    "./firebase/auth.js",
+    "./firebase/firebase-config.js",
+    "./firebase/firestore.js",
+    "./firebase/history.js",
+    "./firebase/messaging.js",
+    "./firebase/tokens.js",
+    "./firebase/user.js",
+    "./firebase/feedback.js",
 
     "./assets/Pulse_logo.png",
     "./assets/Pulse_icon.png",
