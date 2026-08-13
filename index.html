@@ -44,6 +44,48 @@
 
 <main class="setup-container">
 
+<div
+id="welcomeSection"
+class="setup-card">
+
+    <h2>Bem-vindo(a) ao Pulse</h2>
+
+    <p class="description">
+        Receba notícias do seu gosto com facilidade e um visual retrô.
+    </p>
+
+    <section>
+
+        <h3>📄 Sobre o Pulse™</h3>
+
+        <p class="description">
+            Criado em 29/05/2026 pela Retropixel™, o Pulse™ é um web app de notícias personalizadas. Você
+            cria uma conta, escolhe os temas e fontes das notícias que quer receber e pronto! As notícias já vão começar a aparecer
+            para você. Todo dia, novas notícias aparecem, e nós escolhemos a forma mais retrô de fazer você recebê-las:
+            RSS. Isso mesmo, RSS. Então, boa lida e obrigado por usar o Pulse™!
+
+    </section>
+
+    <section
+    style="
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    ">
+
+        <button
+        id="startButton"
+        href="#authSection"
+        class="primary-btn">
+
+            ➡ Começar
+
+        </button>
+
+    </section>
+
+</div>
+
 <!-- ==========================
      LOGIN / CADASTRO
 ========================== -->
@@ -111,6 +153,15 @@ class="setup-card">
         class="primary-btn">
 
             🚪 Entrar
+
+        </button>
+
+        <button
+        id="passwordButton"
+        href="forgotpassword.html"
+        class="primary-btn">
+
+            ❓ Esqueceu a senha?
 
         </button>
 
@@ -216,55 +267,7 @@ style="display:none;">
         </div>
 
     </section>
-
-    <!-- DIAS -->
-
-    <section>
-
-        <h3>Dias da Semana</h3>
-
-        <div class="chips">
-
-            <button class="day">Seg</button>
-            <button class="day">Ter</button>
-            <button class="day">Qua</button>
-            <button class="day">Qui</button>
-            <button class="day">Sex</button>
-            <button class="day">Sáb</button>
-            <button class="day">Dom</button>
-
-        </div>
-
-    </section>
-
-    <!-- HORÁRIO -->
-
-    <section>
-
-        <h3>Horário das Notificações</h3>
-
-        <input
-        type="time"
-        id="notificationTime">
-
-    </section>
-
-    <!-- NOTIFICAÇÕES -->
-
-    <section>
-
-        <h3>Permissões</h3>
-
-        <button
-        id="enableNotifications"
-        class="primary-btn">
-
-            🔔 Ativar Notificações
-
-        </button>
-
-    </section>
-
+    
     <!-- FINALIZAR -->
 
     <button
