@@ -33,7 +33,6 @@ const RSS_FEEDS = {
 // ==========================
 
 const RSS_TO_JSON =
-
 "https://api.rss2json.com/v1/api.json?rss_url=";
 
 
@@ -47,9 +46,6 @@ export async function fetchRSSFeed(
 
     try{
 
-        const cacheBuster =
-        Date.now();
-
         const requestUrl =
 
         RSS_TO_JSON +
@@ -60,34 +56,13 @@ export async function fetchRSSFeed(
 
         "&t=" +
 
-        cacheBuster;
+        Date.now();
 
 
         const response =
 
         await fetch(
-
-            requestUrl,
-
-            {
-                method:
-                "GET",
-
-                cache:
-                "no-store",
-
-                headers: {
-
-                    "Cache-Control":
-                    "no-cache",
-
-                    "Pragma":
-                    "no-cache"
-
-                }
-
-            }
-
+            requestUrl
         );
 
 
@@ -115,8 +90,8 @@ export async function fetchRSSFeed(
         ){
 
             console.error(
-                "Erro retornado pelo RSS2JSON:",
-                data
+                "RSS2JSON:",
+                data.message || data
             );
 
             return [];
@@ -177,7 +152,7 @@ export async function fetchAllRSS(
 
 
     // ==========================
-    // FONTES ESCOLHIDAS
+    // FONTES SELECIONADAS
     // ==========================
 
     const feedsToLoad =
@@ -196,7 +171,7 @@ export async function fetchAllRSS(
 
 
     // ==========================
-    // BUSCAR CADA FONTE
+    // CARREGAR FONTES
     // ==========================
 
     for(
@@ -212,10 +187,8 @@ export async function fetchAllRSS(
         if(!feedUrl){
 
             console.warn(
-
                 "Fonte não encontrada:",
                 source
-
             );
 
             continue;
@@ -223,45 +196,28 @@ export async function fetchAllRSS(
         }
 
 
-        try{
+        const news =
 
-            const news =
-
-            await fetchRSSFeed(
-                feedUrl
-            );
+        await fetchRSSFeed(
+            feedUrl
+        );
 
 
-            news.forEach(
-                item => {
+        news.forEach(
+            item => {
 
-                    item.source =
-                    source;
+                item.source =
+                source;
 
-                }
-            );
+            }
+        );
 
 
-            allNews =
+        allNews =
 
-            allNews.concat(
-                news
-            );
-
-        }
-        catch(error){
-
-            console.error(
-
-                "Erro ao carregar " +
-                source +
-                ":",
-
-                error
-
-            );
-
-        }
+        allNews.concat(
+            news
+        );
 
     }
 
