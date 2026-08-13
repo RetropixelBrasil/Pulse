@@ -3,7 +3,10 @@
 // RSS.JS
 // ==========================
 
+
+// ==========================
 // FEEDS RSS
+// ==========================
 
 const RSS_FEEDS = {
 
@@ -38,20 +41,88 @@ const RSS_TO_JSON =
 // BUSCAR UM FEED
 // ==========================
 
-export async function fetchRSSFeed(url){
+export async function fetchRSSFeed(
+    url
+){
 
     try{
 
+        const cacheBuster =
+        Date.now();
+
+        const requestUrl =
+
+        RSS_TO_JSON +
+
+        encodeURIComponent(
+            url
+        ) +
+
+        "&t=" +
+
+        cacheBuster;
+
+
         const response =
+
         await fetch(
 
-            RSS_TO_JSON +
-            encodeURIComponent(url)
+            requestUrl,
+
+            {
+                method:
+                "GET",
+
+                cache:
+                "no-store",
+
+                headers: {
+
+                    "Cache-Control":
+                    "no-cache",
+
+                    "Pragma":
+                    "no-cache"
+
+                }
+
+            }
 
         );
 
+
+        if(
+            !response.ok
+        ){
+
+            throw new Error(
+
+                "HTTP " +
+                response.status
+
+            );
+
+        }
+
+
         const data =
         await response.json();
+
+
+        if(
+            data.status &&
+            data.status !== "ok"
+        ){
+
+            console.error(
+                "Erro retornado pelo RSS2JSON:",
+                data
+            );
+
+            return [];
+
+        }
+
 
         return data.items || [];
 
@@ -74,9 +145,16 @@ export async function fetchRSSFeed(url){
 // BUSCAR TODOS OS FEEDS
 // ==========================
 
-export async function fetchAllRSS(selectedSources = []){
+export async function fetchAllRSS(
+    selectedSources = []
+){
 
     let allNews = [];
+
+
+    // ==========================
+    // MAPA DE FONTES
+    // ==========================
 
     const sourceMap = {
 
@@ -97,43 +175,96 @@ export async function fetchAllRSS(selectedSources = []){
 
     };
 
+
+    // ==========================
+    // FONTES ESCOLHIDAS
+    // ==========================
+
     const feedsToLoad =
 
     selectedSources.length > 0
 
-    ? selectedSources
+    ?
 
-    : Object.keys(sourceMap);
+    selectedSources
 
-    for(const source of feedsToLoad){
+    :
+
+    Object.keys(
+        sourceMap
+    );
+
+
+    // ==========================
+    // BUSCAR CADA FONTE
+    // ==========================
+
+    for(
+        const source
+        of
+        feedsToLoad
+    ){
 
         const feedUrl =
         sourceMap[source];
 
+
         if(!feedUrl){
+
+            console.warn(
+
+                "Fonte não encontrada:",
+                source
+
+            );
 
             continue;
 
         }
 
-        const news =
-        await fetchRSSFeed(
-            feedUrl +
-            "?t=" +
-            Date.now()
-        );
 
-        news.forEach(item => {
+        try{
 
-            item.source =
-            source;
+            const news =
 
-        });
+            await fetchRSSFeed(
+                feedUrl
+            );
 
-        allNews =
-        allNews.concat(news);
+
+            news.forEach(
+                item => {
+
+                    item.source =
+                    source;
+
+                }
+            );
+
+
+            allNews =
+
+            allNews.concat(
+                news
+            );
+
+        }
+        catch(error){
+
+            console.error(
+
+                "Erro ao carregar " +
+                source +
+                ":",
+
+                error
+
+            );
+
+        }
 
     }
+
 
     return allNews;
 
