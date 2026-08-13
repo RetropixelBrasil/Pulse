@@ -42,12 +42,12 @@ export async function loadRealNews(){
         }
 
         if(
-            sourceMap[source]
-            .length < 3
+            sourceMap[source].length < 3
         ){
 
-            sourceMap[source]
-            .push(item);
+            sourceMap[source].push(
+                item
+            );
 
         }
 
@@ -60,17 +60,23 @@ export async function loadRealNews(){
     ).flat();
 
     filteredNews.sort(
-        (a,b) =>
+        (a,b) => {
 
-        new Date(
-            b.pubDate || 0
-        )
+            return (
 
-        -
+                new Date(
+                    b.pubDate || 0
+                )
 
-        new Date(
-            a.pubDate || 0
-        )
+                -
+
+                new Date(
+                    a.pubDate || 0
+                )
+
+            );
+
+        }
     );
 
     return filteredNews.map(item => ({
@@ -106,7 +112,7 @@ export async function loadRealNews(){
         item.thumbnail || "",
 
         source:
-        item.source
+        item.source || "Desconhecida"
 
     }));
 
