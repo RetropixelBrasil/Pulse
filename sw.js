@@ -1,4 +1,4 @@
-const CACHE_NAME = "pulse-v1";
+const CACHE_NAME = "pulse-v2";
 
 const FILES = [
 
@@ -8,6 +8,7 @@ const FILES = [
     "./feed.html",
     "./history.html",
     "./settings.html",
+    "./forgotpassword.html",
 
     "./manifest.webmanifest",
 
@@ -36,17 +37,28 @@ const FILES = [
 
 ];
 
+
+// ==========================
+// INSTALAÇÃO
+// ==========================
+
 self.addEventListener(
     "install",
     event => {
 
         event.waitUntil(
 
-            caches.open(CACHE_NAME)
-            .then(cache =>
+            caches.open(
+                CACHE_NAME
+            )
+            .then(
+                cache => {
 
-                cache.addAll(FILES)
+                    return cache.addAll(
+                        FILES
+                    );
 
+                }
             )
 
         );
@@ -56,6 +68,11 @@ self.addEventListener(
     }
 );
 
+
+// ==========================
+// ATIVAÇÃO
+// ==========================
+
 self.addEventListener(
     "activate",
     event => {
@@ -63,22 +80,33 @@ self.addEventListener(
         event.waitUntil(
 
             caches.keys()
-            .then(keys =>
+            .then(
+                keys => {
 
-                Promise.all(
+                    return Promise.all(
 
-                    keys.map(key => {
+                        keys.map(
+                            key => {
 
-                        if(key !== CACHE_NAME){
+                                if(
+                                    key !==
+                                    CACHE_NAME
+                                ){
 
-                            return caches.delete(key);
+                                    return caches.delete(
+                                        key
+                                    );
 
-                        }
+                                }
 
-                    })
+                                return null;
 
-                )
+                            }
+                        )
 
+                    );
+
+                }
             )
 
         );
@@ -88,19 +116,197 @@ self.addEventListener(
     }
 );
 
+
+// ==========================
+// FETCH
+// ==========================
+
 self.addEventListener(
     "fetch",
     event => {
 
+        const request =
+        event.request;
+
+        const url =
+        new URL(
+            request.url
+        );
+
+
+        // ==========================
+        // REQUISIÇÕES EXTERNAS
+        // ==========================
+
+        // Firebase, gstatic, RSS,
+        // RSS2JSON e qualquer outro
+        // domínio externo passam
+        // diretamente para a rede.
+
+        if(
+            url.origin !==
+            self.location.origin
+        ){
+
+            return;
+
+        }
+
+
+        // ==========================
+        // SOMENTE GET
+        // ==========================
+
+        if(
+            request.method !==
+            "GET"
+        ){
+
+            return;
+
+        }
+
+
+        // ==========================
+        // HTML / JS / CSS
+        // ==========================
+
+        // Sempre tenta buscar a versão
+        // mais recente primeiro.
+
+        if(
+
+            request.destination ===
+            "document"
+
+            ||
+
+            request.destination ===
+            "script"
+
+            ||
+
+            request.destination ===
+            "style"
+
+        ){
+
+            event.respondWith(
+
+                fetch(
+                    request,
+                    {
+                        cache:
+                        "no-store"
+                    }
+                )
+
+                .then(
+                    response => {
+
+                        if(
+                            response &&
+                            response.ok
+                        ){
+
+                            const copy =
+                            response.clone();
+
+                            caches.open(
+                                CACHE_NAME
+                            )
+                            .then(
+                                cache => {
+
+                                    cache.put(
+                                        request,
+                                        copy
+                                    );
+
+                                }
+                            );
+
+                        }
+
+                        return response;
+
+                    }
+                )
+
+                .catch(
+                    () => {
+
+                        return caches.match(
+                            request
+                        );
+
+                    }
+                )
+
+            );
+
+            return;
+
+        }
+
+
+        // ==========================
+        // IMAGENS E OUTROS ARQUIVOS
+        // ==========================
+
         event.respondWith(
 
-            caches.match(event.request)
-            .then(response =>
+            caches.match(
+                request
+            )
 
-                response ||
+            .then(
+                cachedResponse => {
 
-                fetch(event.request)
+                    if(
+                        cachedResponse
+                    ){
 
+                        return cachedResponse;
+
+                    }
+
+                    return fetch(
+                        request
+                    )
+                    .then(
+                        response => {
+
+                            if(
+                                response &&
+                                response.ok
+                            ){
+
+                                const copy =
+                                response.clone();
+
+                                caches.open(
+                                    CACHE_NAME
+                                )
+                                .then(
+                                    cache => {
+
+                                        cache.put(
+                                            request,
+                                            copy
+                                        );
+
+                                    }
+                                );
+
+                            }
+
+                            return response;
+
+                        }
+                    );
+
+                }
             )
 
         );
